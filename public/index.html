@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <title>Jason Godfrey Software Engineer: Web&Games Developer</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="./src/styles/index.scss" />
+    <link rel="icon" href="./src/assets/favicon.png" type="image/png" />
+    <style>
+      .dg.ac {
+        display: none !important;
+      }
+      body {
+        overflow: hidden;
+        margin: 0;
+        padding: 0;
+        background-color: #07070c;
+        filter: url(#pixelate);
+        font-family: Arial, sans-serif;
+      }
+      .navbar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        font-size: 24px;
+        font-weight: bold;
+        color: white;
+        z-index: 9999;
+        pointer-events: auto;
+      }
+      .footer-nav {
+        position: fixed;
+        bottom: 20px;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        z-index: 9999;
+        pointer-events: auto;
+      }
+      .footer-nav .line {
+        width: 100%;
+        height: 1px;
+        background-color: #555565;
+        margin-bottom: 10px;
+      }
+      .footer-nav .dots {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+      }
+      .footer-nav .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: #555565;
+        cursor: pointer;
+        transition: background-color 1s, opacity 1s;
+      }
+      .footer-nav .dot.active {
+        background-color: white;
+        opacity: 1;
+      }
+      .footer-nav .dot:not(.active) {
+        opacity: 0.5;
+      }
+      .footer-nav .dot:hover {
+        background-color: #aaa;
+      }
+      .section {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        text-align: center;
+        z-index: 10000;
+        background: rgba(0, 0, 0, 0);
+        pointer-events: none;
+        opacity: 0;
+      }
+      .section.active {
+        display: flex;
+        pointer-events: none;
+        opacity: 0;
+      }
+      .section-content {
+        pointer-events: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .title {
+        font-size: 18px;
+        max-width: 600px;
+        line-height: 1.5;
+        text-align: center;
+        font-weight: 300;
+        margin-bottom: 10px;
+        letter-spacing: 1px;
+      }
+      .subtext {
+        font-size: 18px;
+        max-width: 600px;
+        line-height: 1.5;
+        text-align: center;
+        font-weight: 300;
+        margin-bottom: 30px;
+        letter-spacing: 1px;
+      }
+      .domain {
+        font-size: 48px;
+        font-weight: 700;
+        margin-bottom: 20px;
+        letter-spacing: 1px;
+        text-align: center;
+        word-wrap: break-word;
+      }
+      .button {
+        padding: 12px 24px;
+        background-color: transparent;
+        color: white;
+        border: 2px solid #555565;
+        border-radius: 5px;
+        cursor: pointer;
+        pointer-events: auto;
+        transition: border-color 0.3s, color 0.3s;
+      }
+      .button:hover {
+        border-color: white;
+        color: white;
+      }
+      .icon-button {
+        display: inline-block;
+        margin: 0 10px 20px 10px;
+        color: white;
+        font-size: 50px;
+        transition: color 0.3s;
+        pointer-events: auto;
+      }
+      .icon-button:hover {
+        color: #ccc;
+      }
+      svg {
+        position: absolute;
+        width: 0;
+        height: 0;
+      }
+      @media (max-width: 768px) {
+        .title {
+          font-size: 16px;
+        }
+        .domain {
+          font-size: 36px;
+          letter-spacing: 0.5px;
+        }
+        .subtext {
+          font-size: 16px;
+          max-width: 90%;
+          line-height: 1.4;
+        }
+        .button {
+          padding: 10px 20px;
+          font-size: 14px;
+        }
+        .icon-button {
+          font-size: 40px;
+        }
+      }
+      @media (max-width: 480px) {
+        .title {
+          font-size: 14px;
+        }
+        .domain {
+          font-size: 28px;
+          letter-spacing: 0.5px;
+        }
+        .subtext {
+          font-size: 14px;
+          max-width: 80%;
+          line-height: 1.3;
+        }
+        .button {
+          padding: 8px 16px;
+          font-size: 12px;
+        }
+        .icon-button {
+          font-size: 30px;
+        }
+      }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/ScrollTrigger.min.js"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-D8V7189LVN"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-D8V7189LVN');
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  </head>
+  <body>
+    <button id="enterButton" class="enter-btn"></button>
+
+    <header>
+      <div class="centered-header">
+        <h1>JasonGodfrey.dev</h1>
+        <h2></h2>
+      </div>
+    </header>
+
+    <div class="sidebar">
+      <h3><br /></h3>
+      <div id="clock-weather"></div>
+    </div>
+    <div class="btn-group">
+      <button class="custom-btn about-btn glass">About</button>
+      <button class="custom-btn web-btn glass">Web</button>
+      <button class="custom-btn game-dev glass">Games</button>
+    </div>
+
+    <div class="console-container">
+      <div class="console">
+        <div class="console-content">
+          <p class="console-line">//Directory:</p>
+          <p class="console-line"><a href="https://samuraistudios.vercel.app/" class="command-link">*SAMURAI STUDIOS</a></p>
+          <p class="console-line"><a href="/web/" class="command-link">*FULL STACK WEB|GAME DEV</a></p>
+          <p class="console-line"><a href="https://github.com/jasonygodfrey" class="command-link">*GITHUB</a></p>
+          <p class="console-line"><a href="/about" class="command-link">*ABOUT</a></p>
+          <p class="console-line"><a href="https://www.linkedin.com/in/jasong7" class="command-link">*LINKEDIN CONTACT</a></p>
+        </div>
+      </div>
+    </div>
+
+    <div id="contact-info" style="display: none">
+      Thanks For Visiting!<br />
+      Linkedin<br />
+      Github<br />
+      Email: Jason@jasongodfrey.dev<br />
+    </div>
+
+    <div id="GameDev-info" style="display: none">GameDev info</div>
+
+    <div id="WebDev-info" style="display: none">WebDev Info</div>
+    <div id="About-info" style="display: none">about</div>
+
+    <div class="navbar">
+      <!-- Navbar content -->
+    </div>
+    <div class="section active" id="home">
+      <div class="section-content">
+        <div class="title">Welcome to</div>
+        <div class="domain">JASONGODFREY.DEV</div>
+        <div class="subtext">Step into the future of web experiences.</div>
+        <button class="button" onclick="navigateTo('about')">About</button>
+      </div>
+    </div>
+    <div class="section" id="about">
+      <div class="section-content">
+        <div class="title">About</div>
+        <div class="subtext">
+          I am a full-stack software engineer specializing in creating immersive web and game experiences. My work blends innovation and creativity, bringing your digital visions to life.
+        </div>
+        <button class="button" onclick="navigateTo('contact')">Contact</button>
+      </div>
+    </div>
+    <div class="section" id="contact">
+      <div class="section-content">
+        <div class="title">Contact</div>
+        <div class="subtext">Get in touch for more information or collaborations.</div>
+        <div class="icons">
+          <a href="https://github.com/jasonygodfrey" target="_blank" class="icon-button"><i class="fab fa-github"></i></a>
+          <a href="https://www.linkedin.com/in/jasong7/" target="_blank" class="icon-button"><i class="fab fa-linkedin"></i></a>
+        </div>
+        <button class="button" onclick="navigateTo('home')">Home</button>
+      </div>
+    </div>
+    <div class="footer-nav">
+      <div class="line"></div>
+      <div class="dots">
+        <div class="dot active" onclick="navigateTo('home')"></div>
+        <div class="dot" onclick="navigateTo('about')"></div>
+        <div class="dot" onclick="navigateTo('contact')"></div>
+      </div>
+    </div>
+    <div id="root"></div> <!-- Ensure this element exists -->
+    <script src="./src/app.js"></script>
+    <svg>
+      <filter id="pixelate" x="0" y="0">
+        <feFlood x="8" y="8" height="8" width="8"></feFlood>
+        <feComposite width="8" height="8"></feComposite>
+        <feTile result="a"></feTile>
+        <feComposite in="SourceGraphic" in2="a" operator="in"></feComposite>
+      </filter>
+    </svg>
+    
+  </body>
+</html>
+

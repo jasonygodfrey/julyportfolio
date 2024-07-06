@@ -1,0 +1,585 @@
+@font-face {
+  font-family: 'Cathedral';
+  src: url('Cathedral.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, #111111, #000000),
+  linear-gradient(to right, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+  canvas {
+    display: block;
+    z-index: 2
+    
+    
+    
+    ; /* This ensures canvas is behind your other elements */
+
+  }
+
+  header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Vertically centers the nav bar */
+    padding: 10px 0px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: 1;
+}
+
+  
+  
+  
+  nav ul.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+  }
+  
+  nav ul.nav-links a {
+    text-decoration: none;
+    color: white;
+    transition: color 0.3s ease;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9); /* Horizontal offset, Vertical offset, Blur radius, and color */
+  
+    
+  }
+  
+  nav ul.nav-links a:hover {
+    color: #ff810b;
+  }
+  
+  nav ul.nav-links a.active-link {
+    color: #ffffff;  /* Change this to the color you want for the active link */
+  }
+
+  /* Button Styles */
+
+  .btn-group {
+    
+    text-align: center;
+    position: absolute; 
+    bottom: 5%;   /* Adjust the distance from the bottom as needed */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3000; /* Make sure it's above other elements */
+    display: flex;  /* This will make buttons align horizontally */
+    gap: 20px;      /* Adjust the gap between buttons as needed */
+}
+.custom-btn {
+  font-size: 18px; /* Increase the font size */
+  padding: 10px 20px; /* Adjust padding as needed */
+  color: white; /* Set text color to white */
+  background-color: red; /* Set background color to red */
+  width: 100px; /* Set a fixed width for the buttons */
+  text-align: center; /* Center the text horizontally */
+}
+
+.custom-btn.game-dev {
+  font-size: 18px; /* Increase the font size */
+  padding: 10px 20px; /* Adjust padding as needed */
+  color: white; /* Set text color to white */
+  background-color: red; /* Set background color to red */
+  width: 100px; /* Set a fixed width for the buttons */
+  text-align: center; /* Center the text horizontally */
+  padding-left: 15px; /* Add left padding to the "GameDev" button */
+}
+
+.custom-btn.about-btn {
+  background-image: url('abutton1.png');
+  background-size: 100px 41px;
+  background-color: transparent;
+  border: none;
+  padding: 10px 20px;
+  font-size: 18px;
+  text-align: center;
+  color: white;
+  position: relative; /* Needed for z-index to work */
+  z-index: 1; /* Place the text above the pseudo-element's background */
+  text-shadow: 2px 2px 3px rgba(0, 0, 0, 1); /* Add a subtle text shadow */
+
+  
+}
+
+.custom-btn.about-btn::before {
+  content: ''; /* Create a pseudo-element for the background */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent white */
+  z-index: -1; /* Place the background behind the text */
+  transform-origin: center center;
+  transform: scale(1.1); /* Slightly larger than the button */
+  border-radius: 10px;
+  opacity: 0; /* Hidden by default */
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.custom-btn.about-btn:hover::before {
+  opacity: 1; /* Show the background on hover */
+  transform: scale(1); /* Return to normal scale on hover */
+}
+
+
+.custom-btn.web-btn {
+  background-image: url('abutton2.png');
+  background-size: 100px 41px;
+  background-color: transparent;
+  border: none;
+  padding: 10px 20px;
+  font-size: 18px;
+  text-align: center;
+  color: white;
+  position: relative; /* Needed for z-index to work */
+  z-index: 1; /* Place the text above the pseudo-element's background */
+  text-shadow: 2px 2px 3px rgba(0, 0, 0, 1); /* Add a subtle text shadow */
+
+  
+}
+
+.custom-btn.web-btn::before {
+  content: ''; /* Create a pseudo-element for the background */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent white */
+  z-index: -1; /* Place the background behind the text */
+  transform-origin: center center;
+  transform: scale(1.1); /* Slightly larger than the button */
+  border-radius: 10px;
+  opacity: 0; /* Hidden by default */
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.custom-btn.web-btn:hover::before {
+  opacity: 1; /* Show the background on hover */
+  transform: scale(1); /* Return to normal scale on hover */
+}
+
+.custom-btn.game-dev {
+  background-image: url('abutton3.png');
+  background-size: 100px 42px;
+  background-color: transparent;
+  border: none;
+  padding: 10px 20px;
+  font-size: 18px;
+  text-align: center;
+  color: white;
+  position: relative; /* Needed for z-index to work */
+  z-index: 1; /* Place the text above the pseudo-element's background */
+  text-shadow: 2px 2px 3px rgba(0, 0, 0, 1); /* Add a subtle text shadow */
+  padding-left: 17px; /* Add left padding to the "GameDev" button */
+
+  
+}
+
+.custom-btn.game-dev::before {
+  content: ''; /* Create a pseudo-element for the background */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent white */
+  z-index: -1; /* Place the background behind the text */
+  transform-origin: center center;
+  transform: scale(1.1); /* Slightly larger than the button */
+  border-radius: 10px;
+  opacity: 0; /* Hidden by default */
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.custom-btn.game-dev:hover::before {
+  opacity: 1; /* Show the background on hover */
+  transform: scale(1); /* Return to normal scale on hover */
+}
+
+#contact-info {
+  display: none;
+  background: rgba(0, 0, 0, 0.6);  /* Semi-transparent background */
+  color: white;              /* white text */
+  font-size: 20px;           /* change if you need */
+  text-align: center;        /* center the text */
+  padding: 10px 20px;        /* adjust for size */
+  border: 1px solid white;   /* Add a border similar to the buttons */
+  position: absolute;        /* Absolute positioning to center on page */
+  top: 50%;                  /* Start from 50% of the viewport height */
+  left: 50%;                 /* Start from 50% of the viewport width */
+  transform: translate(-0%, -50%);  /* Adjusts the position to be truly centered */
+  z-index: 10;               /* Ensure it's above other elements */
+  animation: fadeIn 2s;  /* Fade in animation */
+  border-radius: 10px;  /* Optional: rounds the corners of the background */
+
+}
+#GameDev-info {
+  display: none;
+  background: rgba(0, 0, 0, 0.6);  /* Semi-transparent background */
+  color: white;              /* white text */
+  font-size: 20px;           /* change if you need */
+  text-align: center;        /* center the text */
+  padding: 10px 20px;        /* adjust for size */
+  border: 1px solid white;   /* Add a border similar to the buttons */
+  position: absolute;        /* Absolute positioning to center on page */
+  top: 50%;                  /* Start from 50% of the viewport height */
+  left: 50%;                 /* Start from 50% of the viewport width */
+  transform: translate(-0%, -50%);  /* Adjusts the position to be truly centered */
+  z-index: 10;               /* Ensure it's above other elements */
+  animation: fadeIn 2s;  /* Fade in animation */
+  border-radius: 10px;  /* Optional: rounds the corners of the background */
+
+}
+#WebDev-info {
+  display: none;
+  background: rgba(0, 0, 0, 0.6);  /* Semi-transparent background */
+  color: white;              /* white text */
+  font-size: 20px;           /* change if you need */
+  text-align: center;        /* center the text */
+  padding: 10px 20px;        /* adjust for size */
+  border: 1px solid white;   /* Add a border similar to the buttons */
+  position: absolute;        /* Absolute positioning to center on page */
+  top: 50%;                  /* Start from 50% of the viewport height */
+  left: 50%;                 /* Start from 50% of the viewport width */
+  transform: translate(-0%, -50%);  /* Adjusts the position to be truly centered */
+  z-index: 10;               /* Ensure it's above other elements */
+  animation: fadeIn 2s;  /* Fade in animation */
+  border-radius: 10px;  /* Optional: rounds the corners of the background */
+
+}
+#About-info {
+  display: none;
+  background: rgba(0, 0, 0, 0.6);  /* Semi-transparent background */
+  color: white;              /* white text */
+  font-size: 20px;           /* change if you need */
+  text-align: center;        /* center the text */
+  padding: 10px 20px;        /* adjust for size */
+  border: 1px solid white;   /* Add a border similar to the buttons */
+  position: absolute;        /* Absolute positioning to center on page */
+  top: 50%;                  /* Start from 50% of the viewport height */
+  left: 50%;                 /* Start from 50% of the viewport width */
+  transform: translate(-0%, -50%);  /* Adjusts the position to be truly centered */
+  z-index: 10;               /* Ensure it's above other elements */
+  animation: fadeIn 2s;  /* Fade in animation */
+  border-radius: 10px;  /* Optional: rounds the corners of the background */
+
+}
+
+@keyframes fadeIn {
+  from {
+      opacity: 0;
+  }
+  to {
+      opacity: 1;
+  }
+}
+body, button, a {
+}
+
+.centered-header {
+  text-align: center;
+  position: absolute; 
+  top: 190%;   /* Adjust the distance from the top as needed */
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.centered-header h1 {
+  color: white;
+  margin: 0;
+  font-size: 2.5em; /* Adjust font size as needed */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
+  z-index: 3;
+
+}
+
+.centered-header h2 {
+  color: white;
+  margin-top: 5px; /* Adjust margin as needed */
+  font-size: 1.5em; /* Adjust font size as needed */
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+/* Sidebar Styles */
+
+.sidebar {
+  position: fixed;
+  bottom: 0; /* Position the sidebar at the bottom */
+  left: 0;
+  width: 100%; /* Make the sidebar full width */
+  max-width: none; /* Reset max-width */
+  height: 10%; /* Auto adjust height */
+  background: rgba(255, 255, 255, 0.452);
+  backdrop-filter: blur(10px);
+  z-index: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.sidebar h3 {
+  color: white;
+  font-size: 150%;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+  margin-bottom: 10px;
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+}
+.console-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center;  /* Center vertically */
+  z-index: 1000;
+  padding: 20px 0;
+}
+
+.console {
+  width: 75%; /* Full width by default */
+  max-width: 400px; /* Limit the maximum width to 400px */
+  height: 180px; /* Set a fixed height for the console */
+  padding: 10px;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  background: rgba(184, 184, 184, 0);
+  color: rgb(255, 255, 255);
+  font-family: 'Courier New', monospace;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Ensure content does not overflow */
+  backdrop-filter: blur(1px);
+  box-shadow: 0px 0px 0px rgb(231, 231, 231);
+}
+
+/* Media Query to adjust the max-width based on screen width */
+@media (max-width: 600px) {
+  .console {
+    max-width: 100%; /* Allow full width on smaller screens */
+  }
+}
+.console-header {
+  font-size: 11px;
+  text-align: left;
+  margin-bottom: 10px;
+}
+
+   /* Add scrollbar to the console content */
+   .console-content {
+    overflow-y: auto;
+    /* Hide the default scrollbar */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    font-size: 20px;
+    flex-grow: 1;
+
+  }
+
+  /* Style the scrollbar track */
+  .console-content::-webkit-scrollbar {
+    width: 8px; /* Adjust as needed */
+  }
+  
+  /* Style the scrollbar thumb */
+  .console-content::-webkit-scrollbar-thumb {
+    background-color: #bababa;
+    border-radius: 0px;
+  }
+
+  /* Add glow effect to the scrollbar thumb */
+  .console-content::-webkit-scrollbar-thumb:active {
+    box-shadow: 0 0 10px #62ff32;
+  }
+
+.console-line {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow: hidden;
+  animation: typeAnimation 2.5s steps(30, end) forwards, blinkCursor 0.5s forwards;
+  display: flex; /* add this */
+  align-items: center; /* add this */
+  overflow: hidden;
+  white-space: nowrap;
+}
+.command-link:hover {
+  background-color: #fc462652; /* Keeps your custom background color */
+}
+
+
+
+
+
+@keyframes typeAnimation {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+    
+  }
+  
+}
+
+@keyframes blinkCursor {
+  from,
+  to {
+    border-right-color: transparent;
+  }
+  50% {
+    border-right-color: white;
+  }
+}
+
+
+/* Update the styling for the text input field */
+.console-input {
+  display: flex;
+  align-items: center;
+  background: transparent; /* Set background to transparent */
+  border: none; /* Remove the border */
+  margin-top: 4px;
+
+}
+
+/* Style the input element itself */
+#commandInput {
+  width: 100%;
+  padding: 0px;
+  background: transparent; /* Set background to transparent */
+  border: none; /* Remove the border */
+  color: rgb(255, 255, 255); /* Set text color to white */
+  outline: none; /* Remove the default focus outline */
+
+  /* Glow effect */
+}
+
+
+/* Optional: Add a placeholder color */
+#commandInput::placeholder {
+  color: rgba(255, 255, 255, 0.5); /* Set a semi-transparent white color */
+}
+
+
+.prompt {
+  margin-right: 5px;
+  
+}
+.command-link {
+  color: rgb(255, 69, 59);
+  text-decoration: none; /* this is to remove the default underline of links */
+  font-weight: bold;
+
+}
+
+.command-link:hover {
+  color: #efffee; /* you can adjust this to the hover color you want */
+}
+.command-link:visited {
+  color: rgb(255, 55, 45);
+}
+
+
+.dir-btn {
+  background-color: rgba(0, 255, 0, 0);
+  border: 1px solid #62ff32;
+  border-radius: 4px;
+  padding: 2px 6px;
+  color: #0f0;
+  font-family: 'Courier New', monospace;
+  cursor: pointer;
+  margin-left: 10px;
+  transition: background-color 0.3s;
+}
+
+.dir-btn:hover {
+  background-color: rgba(255, 255, 255, 0.4);
+}
+.console-resize-handle {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 0px;
+  height: 0px;
+  background-color: rgba(0, 255, 0, 0.4);
+  cursor: nwse-resize; /* diagonal resize cursor */
+  border-radius: 0 0 6px 0;
+}
+
+
+.console-drag-bar {
+  width: 100%;
+  height: 7px;
+  background-color: rgba(0, 255, 0, 0);
+  cursor: move;
+  margin: 0 auto;
+
+}
+
+
+.enter-btn {
+  position: absolute;
+  left: 50%;  /* Center horizontally */
+  bottom: 10%;  /* Position from the bottom */
+  transform: translate(-50%, 0);  /* Correct the position to true center */
+  border: none;  /* Remove border */
+
+  font-size: 24px;  /* Font size for the button */
+  padding: 15px 25px;  /* Padding for the button */
+  color: white;  /* Text color */
+  background-color: rgba(0, 0, 255, 0);  /* Background color */
+  border-radius: 0px;  /* Rounded corners */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);  /* Text shadow for better visibility */
+  cursor: pointer;  /* Cursor style for the button */
+  transition: background-color 0.3s ease;  /* Transition for background color on hover */
+  /* Add more styling as needed */
+}
+
+.enter-btn:hover {
+}
+
+
+#blackSkinButton {
+  width: 50px; /* Adjust the size to make it square */
+  height: 50px; /* Equal to the width for a square shape */
+  background-color: black; /* Black background */
+  color: white; /* White text */
+  border: 0px solid white; /* White border */
+  font-size: 14px; /* Adjust font size as needed */
+  text-align: center; /* Center the text */
+  line-height: 46px; /* Center the text vertically */
+  cursor: pointer; /* Change cursor to pointer */
+  transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover effect */
+  border-radius: 0px; /* Optional: for rounded corners */
+}
+
+#blackSkinButton:hover {
+  background-color: grey; /* Slightly lighter background on hover */
+  color: black; /* Black text on hover */
+}
+
+#blackSkinButton:active {
+  background-color: #333; /* Even lighter background when pressed */
+}
