@@ -125,7 +125,7 @@ background-size: cover;
     bottom: 5%;   /* Adjust the distance from the bottom as needed */
     left: 50%;
     transform: translateX(-50%);
-    z-index: 3000; /* Make sure it's above other elements */
+    z-index: -3000; /* Make sure it's above other elements */
     display: flex;  /* This will make buttons align horizontally */
     gap: 20px;      /* Adjust the gap between buttons as needed */
 }
@@ -630,3 +630,4 @@ body, button, a {
 #blackSkinButton:active {
   background-color: #333; /* Even lighter background when pressed */
 }
+
