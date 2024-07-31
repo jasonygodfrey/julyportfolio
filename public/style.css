@@ -1,55 +1,13 @@
+
+
 @font-face {
-  font-family: 'Cathedral';
-  src: url('Cathedral.ttf') format('truetype');
+  font-family: 'MHeiPRCMedium';
+  src: url('/fonts/MHeiPRCMedium.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
-
-@font-face {
-  font-family: 'Helvetica';
-  src: url('./fonts/Helvetica.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'Helvetica';
-  src: url('./fonts/Helvetica-Bold.ttf') format('truetype');
-  font-weight: bold;
-}
-
-@font-face {
-  font-family: 'Helvetica';
-  src: url('./fonts/Helvetica-Oblique.ttf') format('truetype');
-  font-style: italic;
-}
-
-@font-face {
-  font-family: 'Helvetica';
-  src: url('./fonts/Helvetica-BoldOblique.ttf') format('truetype');
-  font-weight: bold;
-  font-style: italic;
-}
-
-@font-face {
-  font-family: 'Helvetica';
-  src: url('./fonts/helvetica-compressed-5871d14b6903a.otf') format('opentype');
-}
-
-@font-face {
-  font-family: 'Helvetica';
-  src: url('./fonts/helvetica-light-587ebe5a59211.ttf') format('truetype');
-  font-weight: 300;
-}
-
-@font-face {
-  font-family: 'Helvetica';
-  src: url('./fonts/helvetica-rounded-bold-5871d05ead8de.otf') format('opentype');
-  font-weight: bold;
-}
 /* Apply Helvetica Bold to the body */
-body {
-  font-family: 'Helvetica-Bold', Arial, sans-serif;
-  font-weight: bold;
-}
+
 
 
 
@@ -125,7 +83,7 @@ background-size: cover;
     bottom: 5%;   /* Adjust the distance from the bottom as needed */
     left: 50%;
     transform: translateX(-50%);
-    z-index: -3000; /* Make sure it's above other elements */
+    z-index: 3000; /* Make sure it's above other elements */
     display: flex;  /* This will make buttons align horizontally */
     gap: 20px;      /* Adjust the gap between buttons as needed */
 }

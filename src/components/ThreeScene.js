@@ -5,6 +5,28 @@ import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass';
 import * as CANNON from 'cannon-es';
+import { Text } from 'troika-three-text';
+
+const vertexShader = `
+  varying vec3 vNormal;
+  void main() {
+    vNormal = normalize(normalMatrix * normal);
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  }
+`;
+
+const fragmentShader = `
+  void main() {
+    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0); // Solid red color
+  }
+`;
+
+// Function to create wireframe geometry
+function createWireframeGeometry(geometry) {
+  const wireframeGeometry = new THREE.WireframeGeometry(geometry);
+  const lineMaterial = new THREE.LineBasicMaterial({ color: 0xff0000, linewidth: 2 });
+  return new THREE.LineSegments(wireframeGeometry, lineMaterial);
+}
 
 const ThreeScene = () => {
   const mountRef = useRef(null);
@@ -112,7 +134,7 @@ const ThreeScene = () => {
       });
       dragon.position.set(0, 0, 10);
       dragon.rotateY(160);
-      dragon.scale.set(0.2, 0.2, 0.2);
+      dragon.scale.set(0.2, 0.25, 0.2);
       scene.add(dragon);
 
       mixer = new THREE.AnimationMixer(dragon);
@@ -142,6 +164,48 @@ const ThreeScene = () => {
         action.play();
       }
     });
+
+    // Load font and add vertical text
+// Create the text mesh
+
+
+  
+
+
+// Create the text mesh
+const textMesh = new Text();
+textMesh.text = '開\n発\n者'; // Add line breaks to make the text vertical
+textMesh.fontSize = 10; // Adjust the size to fit the scene
+textMesh.position.set(-1, 24, 15); // Adjust position as needed
+textMesh.rotation.x = Math.PI / -180; // Rotate to make it vertical
+textMesh.rotation.y = Math.PI / -1; // Rotate to make it vertical
+textMesh.material = new THREE.MeshBasicMaterial({ 
+  color: 0xff0000, 
+  wireframe: false,
+  transparent: true, // Enable transparency
+  opacity: 0.5 // Set opacity to 50%
+});
+
+textMesh.sync(() => {
+  scene.add(textMesh);
+});
+// Create the text mesh
+const textMesh2 = new Text();
+textMesh2.text = '開\n発\n者'; // Add line breaks to make the text vertical
+textMesh2.fontSize = 10; // Adjust the size to fit the scene
+textMesh2.position.set(10, 24, 15); // Adjust position as needed
+textMesh2.rotation.x = Math.PI / -180; // Rotate to make it vertical
+textMesh2.rotation.y = Math.PI / -1; // Rotate to make it vertical
+textMesh2.material = new THREE.MeshBasicMaterial({ 
+  color: 0xff0000, 
+  wireframe: true,
+  transparent: true, // Enable transparency
+  opacity: 1 // Set opacity to 50%
+});
+
+textMesh2.sync(() => {
+  scene.add(textMesh2);
+});
 
     // Create a circle mesh for the camera to look at
     const circleGeometry = new THREE.CircleGeometry(5, 32);
