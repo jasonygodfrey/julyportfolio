@@ -7,34 +7,12 @@ import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPa
 import * as CANNON from 'cannon-es';
 import { Text } from 'troika-three-text';
 
-const vertexShader = `
-  varying vec3 vNormal;
-  void main() {
-    vNormal = normalize(normalMatrix * normal);
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-  }
-`;
-
-const fragmentShader = `
-  void main() {
-    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0); // Solid red color
-  }
-`;
-
-// Function to create wireframe geometry
-function createWireframeGeometry(geometry) {
-  const wireframeGeometry = new THREE.WireframeGeometry(geometry);
-  const lineMaterial = new THREE.LineBasicMaterial({ color: 0xff0000, linewidth: 2 });
-  return new THREE.LineSegments(wireframeGeometry, lineMaterial);
-}
-
 const ThreeScene = () => {
   const mountRef = useRef(null);
   const keyState = {};
-  const mouseMovement = useRef({ x: 0, y: 0 }); // Initialize mouseMovement
+  const mouseMovement = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
-    // Three.js setup
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -53,7 +31,6 @@ const ThreeScene = () => {
     directionalLight.shadow.mapSize.height = 2048;
     scene.add(directionalLight);
 
-    // Skybox
     const loader = new THREE.CubeTextureLoader();
     const texture = loader.load([
       'path/to/px.jpg',
@@ -65,30 +42,26 @@ const ThreeScene = () => {
     ]);
     scene.background = texture;
 
-    // Cannon.js setup
     const world = new CANNON.World();
     world.gravity.set(0, -9.82, 0);
 
-    // Create a plane
     const groundBody = new CANNON.Body({
-      mass: 0, // mass = 0 makes the body static
+      mass: 0,
       shape: new CANNON.Plane(),
     });
     groundBody.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
     world.addBody(groundBody);
 
-    // Create a grid helper
     const gridHelper = new THREE.GridHelper(100, 100, 0xffffff, 0xffffff);
     scene.add(gridHelper);
 
-    // Load the player model and setup animations
     let playerMesh, playerMixer, playerAnimations;
     const playerBody = new CANNON.Body({
       mass: 1,
       shape: new CANNON.Box(new CANNON.Vec3(0.5, 0.5, 0.5)),
       position: new CANNON.Vec3(0, 5, 0),
     });
-    playerBody.angularFactor.set(0, 0, 0); // Prevent rotation around X and Z axes
+    playerBody.angularFactor.set(0, 0, 0);
     world.addBody(playerBody);
 
     const gltfLoader = new GLTFLoader();
@@ -99,14 +72,13 @@ const ThreeScene = () => {
           child.castShadow = true;
         }
       });
-      playerMesh.rotation.y = Math.PI; // Rotate the player 180 degrees
-      playerMesh.scale.set(0.15, 0.15, 0.15); // Set the scale of the player model smaller
+      playerMesh.rotation.y = Math.PI;
+      playerMesh.scale.set(0.10, 0.10, 0.10);
       scene.add(playerMesh);
 
       playerMixer = new THREE.AnimationMixer(playerMesh);
       playerAnimations = gltf.animations;
 
-      // Assuming animation [5] is the running animation
       if (playerAnimations.length > 5) {
         const runningAction = playerMixer.clipAction(playerAnimations[5]);
         runningAction.clampWhenFinished = true;
@@ -114,7 +86,6 @@ const ThreeScene = () => {
       }
     });
 
-    // Load the dragon model and textures
     const textureLoader = new THREE.TextureLoader();
     const diffuseTexture = textureLoader.load('/dragon/textures/MI_M_B_44_Qishilong_body02_2_Inst_diffuse.png');
     const normalTexture = textureLoader.load('/dragon/textures/MI_M_B_44_Qishilong_body02_2_Inst_normal.png');
@@ -126,10 +97,15 @@ const ThreeScene = () => {
         if (child.isMesh) {
           child.material.map = diffuseTexture;
           child.material.normalMap = normalTexture;
-          child.material.emissive = new THREE.Color(0x555555); // Emissive color
-          child.material.emissiveIntensity = 0.05; // Emissive intensity
+          child.material.emissive = new THREE.Color(0xff5555);
+          child.material.emissiveIntensity = 0.0;
+          
+          const color = new THREE.Color(child.material.color);
+          const hsl = color.getHSL({});
+          color.setHSL(hsl.h, 30, hsl.l);
+          child.material.color = color;
 
-          //child.castShadow = true;
+          child.castShadow = true;
         }
       });
       dragon.position.set(0, 0, 10);
@@ -145,7 +121,35 @@ const ThreeScene = () => {
       }
     });
 
-    // Load the pulses model
+    let mixer2;
+    const loader2 = new GLTFLoader();
+    loader2.load('avatar_2025/bucky4.gltf', function (gltf) {
+      gltf.scene.traverse(function (child) {
+        if (child.isMesh) {
+          const wireframeMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true, opacity: 0.1, transparent: true });
+          child.material = wireframeMaterial;
+        }
+      });
+      gltf.scene.scale.set(60, 60, 60);
+      scene.add(gltf.scene);
+
+      gltf.scene.position.y += 1.7;
+
+      if (gltf.animations && gltf.animations.length) {
+        mixer2 = new THREE.AnimationMixer(gltf.scene);
+        gltf.animations.forEach((clip) => {
+          const action = mixer2.clipAction(clip);
+          const slowerDuration = clip.duration * 35;
+          action.setDuration(slowerDuration);
+          action.loop = THREE.LoopRepeat;
+          action.clampWhenFinished = true;
+          action.play();
+        });
+      }
+    }, undefined, function (error) {
+      console.error(error);
+    });
+
     gltfLoader.load('/pulses/scene.gltf', (gltf) => {
       const pulses = gltf.scene;
       pulses.traverse((child) => {
@@ -153,9 +157,8 @@ const ThreeScene = () => {
           child.castShadow = true;
         }
       });
-      pulses.position.set(0, 0, 0); // Set the position of the pulses model
-      pulses.scale.set(20, 20, 20); // Set the scale of the pulses model
-      //scene.add(pulses);
+      pulses.position.set(0, 0, 0);
+      pulses.scale.set(20, 20, 20);
 
       const pulsesMixer = new THREE.AnimationMixer(pulses);
       const pulsesAnimations = gltf.animations;
@@ -165,71 +168,58 @@ const ThreeScene = () => {
       }
     });
 
-    // Load font and add vertical text
-// Create the text mesh
+    const textMesh = new Text();
+    textMesh.text = '開発者';
+    textMesh.fontSize = 15;
+    textMesh.position.set(22, 16, 15);
+    textMesh.rotation.x = Math.PI / -180;
+    textMesh.rotation.y = Math.PI / -1;
 
+    textMesh.material = new THREE.MeshBasicMaterial({ 
+      color: 0xff0000, 
+      wireframe: false,
+      transparent: false,
+      opacity: 1
+    });
 
-  
+    textMesh.sync(() => {
+      scene.add(textMesh);
+    });
 
+    const textMesh2 = new Text();
+    textMesh2.text = '開発者';
+    textMesh2.fontSize = 10;
+    textMesh2.position.set(15, 22, 15);
+    textMesh2.rotation.x = Math.PI / -180;
+    textMesh2.rotation.y = Math.PI / -1;
+    textMesh2.material = new THREE.MeshBasicMaterial({ 
+      color: 0xff0000, 
+      wireframe: true,
+      transparent: true,
+      opacity: 1
+    });
 
-// Create the text mesh
-const textMesh = new Text();
-textMesh.text = '開\n発\n者'; // Add line breaks to make the text vertical
-textMesh.fontSize = 10; // Adjust the size to fit the scene
-textMesh.position.set(-1, 24, 15); // Adjust position as needed
-textMesh.rotation.x = Math.PI / -180; // Rotate to make it vertical
-textMesh.rotation.y = Math.PI / -1; // Rotate to make it vertical
-textMesh.material = new THREE.MeshBasicMaterial({ 
-  color: 0xff0000, 
-  wireframe: false,
-  transparent: true, // Enable transparency
-  opacity: 0.5 // Set opacity to 50%
-});
+    textMesh2.sync(() => {
+      // scene.add(textMesh2);
+    });
 
-textMesh.sync(() => {
-  scene.add(textMesh);
-});
-// Create the text mesh
-const textMesh2 = new Text();
-textMesh2.text = '開\n発\n者'; // Add line breaks to make the text vertical
-textMesh2.fontSize = 10; // Adjust the size to fit the scene
-textMesh2.position.set(10, 24, 15); // Adjust position as needed
-textMesh2.rotation.x = Math.PI / -180; // Rotate to make it vertical
-textMesh2.rotation.y = Math.PI / -1; // Rotate to make it vertical
-textMesh2.material = new THREE.MeshBasicMaterial({ 
-  color: 0xff0000, 
-  wireframe: true,
-  transparent: true, // Enable transparency
-  opacity: 1 // Set opacity to 50%
-});
-
-textMesh2.sync(() => {
-  scene.add(textMesh2);
-});
-
-    // Create a circle mesh for the camera to look at
     const circleGeometry = new THREE.CircleGeometry(5, 32);
     const circleMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 });
     const circleMesh = new THREE.Mesh(circleGeometry, circleMaterial);
-    circleMesh.position.set(0, 2, 0); // Set the circle mesh higher
+    circleMesh.position.set(0, 2, 0);
 
-
-    //scene.add(circleMesh);
-
-    // Bloom effect
     const renderScene = new RenderPass(scene, camera);
     const bloomPass = new UnrealBloomPass(
       new THREE.Vector2(window.innerWidth, window.innerHeight),
-      0.25, // strength
-      0.2, // radius
-      0.085 // threshold
+      0.25,
+      0.2,
+      0.085
     );
 
     const composer = new EffectComposer(renderer);
     composer.addPass(renderScene);
     composer.addPass(bloomPass);
 
-    // Key event listeners
     const handleKeyDown = (event) => {
       keyState[event.code] = true;
     };
@@ -246,7 +236,6 @@ textMesh2.sync(() => {
       const jumpForce = 4;
       let isMoving = false;
 
-      // Move forward/backward
       if (keyState['KeyW']) {
         playerBody.velocity.z = moveSpeed;
         isMoving = true;
@@ -257,7 +246,6 @@ textMesh2.sync(() => {
         playerBody.velocity.z = 0;
       }
 
-      // Move left/right
       if (keyState['KeyA']) {
         playerBody.velocity.x = moveSpeed;
         isMoving = true;
@@ -268,12 +256,10 @@ textMesh2.sync(() => {
         playerBody.velocity.x = 0;
       }
 
-      // Jump
       if (keyState['Space'] && Math.abs(playerBody.velocity.y) < 0.1) {
         playerBody.velocity.y = jumpForce;
       }
 
-      // Play running animation if moving
       if (playerMixer && playerAnimations.length > 5) {
         const runningAction = playerMixer.clipAction(playerAnimations[5]);
         if (isMoving) {
@@ -287,14 +273,14 @@ textMesh2.sync(() => {
     };
 
     const clock = new THREE.Clock();
-    let angle = (62 * Math.PI) / 180; // Start angle at 30 degrees
-    let direction = 1; // 1 for forward, -1 for backward
-    const radius = -5; // Radius for circular motion
-    const initialCameraZ = 2; // Initial position closer
-    const minAngle = (60 * Math.PI) / 180; // Minimum angle for 30 degrees
-    const maxAngle = (120 * Math.PI) / 180; // Maximum angle for 150 degrees
+    let angle = (82 * Math.PI) / 180;
+    let direction = 1;
+    const radius = -5;
+    const initialCameraZ = 2;
+    const minAngle = (80 * Math.PI) / 180;
+    const maxAngle = (100 * Math.PI) / 180;
 
-    camera.position.set(0, 10, initialCameraZ); // Set initial camera position higher
+    camera.position.set(0, 10, initialCameraZ);
 
     const animate = () => {
       requestAnimationFrame(animate);
@@ -306,26 +292,23 @@ textMesh2.sync(() => {
       if (playerMesh) {
         playerMesh.position.copy(playerBody.position);
         playerMesh.quaternion.copy(playerBody.quaternion);
-
-        // Debugging position and velocity
-        console.log(`Player position: ${playerMesh.position.x}, ${playerMesh.position.y}, ${playerMesh.position.z}`);
-        console.log(`Player velocity: ${playerBody.velocity.x}, ${playerBody.velocity.y}, ${playerBody.velocity.z}`);
       }
 
       if (playerMixer) playerMixer.update(1 / 60);
 
       if (mixer) mixer.update(1 / 60);
+      if (mixer2) mixer2.update(1 / 60);
 
-      angle += delta * 0.05 * direction; // Adjust speed of rotation
+      angle += delta * 0.05 * direction;
 
       if (angle >= maxAngle || angle <= minAngle) {
-        direction *= -1; // Reverse direction when reaching the ends
+        direction *= -1;
       }
 
-      camera.position.x = radius * Math.cos(angle) + mouseMovement.current.x * 2; // Add mouse parallax
-      camera.position.z = initialCameraZ + radius * Math.sin(angle) + mouseMovement.current.y * 5; // Adjust for closer position
-      camera.position.y = 1 + mouseMovement.current.y * 2; // Adjust for vertical mouse movement
-      camera.lookAt(circleMesh.position); // Ensure circleMesh is the focus
+      camera.position.x = radius * Math.cos(angle) + mouseMovement.current.x * 2;
+      camera.position.z = initialCameraZ + radius * Math.sin(angle) + mouseMovement.current.y * 5;
+      camera.position.y = 1 + mouseMovement.current.y * 2;
+      camera.lookAt(circleMesh.position);
 
       composer.render();
     };
