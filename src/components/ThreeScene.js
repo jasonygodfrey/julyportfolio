@@ -4,6 +4,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass';
+import { SMAAPass } from 'three/examples/jsm/postprocessing/SMAAPass';
 import * as CANNON from 'cannon-es';
 import { Text } from 'troika-three-text';
 
@@ -14,7 +15,7 @@ const ThreeScene = () => {
 
   useEffect(() => {
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 10000);
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.shadowMap.enabled = true;
@@ -24,12 +25,28 @@ const ThreeScene = () => {
     const ambientLight = new THREE.AmbientLight(0xffffff, 5);
     scene.add(ambientLight);
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 3);
-    directionalLight.position.set(5, 10, 7.5);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 8.5);
+    directionalLight.position.set(0, -350, -30);
     directionalLight.castShadow = true;
-    directionalLight.shadow.mapSize.width = 2048;
-    directionalLight.shadow.mapSize.height = 2048;
+    directionalLight.shadow.mapSize.width = 4096; // Increase shadow map size for better quality
+    directionalLight.shadow.mapSize.height = 4096;
+    directionalLight.shadow.camera.near = 0.5;
+    directionalLight.shadow.camera.far = 500;
+    directionalLight.shadow.camera.left = -50;
+    directionalLight.shadow.camera.right = 50;
+    directionalLight.shadow.camera.top = 50;
+    directionalLight.shadow.camera.bottom = -50;
     scene.add(directionalLight);
+
+    // Add an additional spotlight to enhance illumination
+    const spotLight = new THREE.SpotLight(0xffffff, 2);
+    spotLight.position.set(0, 30, 20);
+    spotLight.angle = Math.PI / 6;
+    spotLight.penumbra = 0.5;
+    spotLight.decay = 2;
+    spotLight.distance = 100;
+    spotLight.castShadow = true;
+    //scene.add(spotLight);
 
     const loader = new THREE.CubeTextureLoader();
     const texture = loader.load([
@@ -110,8 +127,19 @@ const ThreeScene = () => {
       });
       dragon.position.set(0, 0, 10);
       dragon.rotateY(160);
-      dragon.scale.set(0.2, 0.25, 0.2);
+      dragon.scale.set(0.3, 0.35, 0.3);
       scene.add(dragon);
+
+      // Add spotlight to illuminate the dragon
+      const spotLight = new THREE.SpotLight(0xffffff, 2);
+      spotLight.position.set(0, 10, 5);
+      spotLight.angle = Math.PI / 4;
+      spotLight.penumbra = 0.5;
+      spotLight.decay = 2;
+      spotLight.distance = 50;
+      spotLight.castShadow = true;
+      spotLight.target = dragon;
+      scene.add(spotLight);
 
       mixer = new THREE.AnimationMixer(dragon);
       const animations = gltf.animations;
@@ -126,20 +154,20 @@ const ThreeScene = () => {
     loader2.load('avatar_2025/bucky4.gltf', function (gltf) {
       gltf.scene.traverse(function (child) {
         if (child.isMesh) {
-          const wireframeMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true, opacity: 0.1, transparent: true });
+          const wireframeMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true, opacity: 0.118, transparent: true });
           child.material = wireframeMaterial;
         }
       });
       gltf.scene.scale.set(60, 60, 60);
       scene.add(gltf.scene);
-
+ 
       gltf.scene.position.y += 1.7;
-
+ 
       if (gltf.animations && gltf.animations.length) {
         mixer2 = new THREE.AnimationMixer(gltf.scene);
         gltf.animations.forEach((clip) => {
           const action = mixer2.clipAction(clip);
-          const slowerDuration = clip.duration * 35;
+          const slowerDuration = clip.duration * 75;
           action.setDuration(slowerDuration);
           action.loop = THREE.LoopRepeat;
           action.clampWhenFinished = true;
@@ -211,14 +239,18 @@ const ThreeScene = () => {
     const renderScene = new RenderPass(scene, camera);
     const bloomPass = new UnrealBloomPass(
       new THREE.Vector2(window.innerWidth, window.innerHeight),
-      0.25,
-      0.2,
-      0.085
+      0.65,
+      0.01,
+      0.075
     );
+
+    // Add SMAA pass
+    const smaaPass = new SMAAPass(window.innerWidth, window.innerHeight);
 
     const composer = new EffectComposer(renderer);
     composer.addPass(renderScene);
     composer.addPass(bloomPass);
+    composer.addPass(smaaPass);
 
     const handleKeyDown = (event) => {
       keyState[event.code] = true;
@@ -312,6 +344,18 @@ const ThreeScene = () => {
 
       composer.render();
     };
+
+    const circleTexture = new THREE.TextureLoader().load("circle.png");
+    const circleMaterial2 = new THREE.MeshBasicMaterial({
+      map: circleTexture,
+      side: THREE.DoubleSide,
+      transparent: true,
+    });
+    const circleGeometry2 = new THREE.CircleGeometry(7.5, 32); // 7.5 is the radius and 32 is the number of segments
+    const circleMesh2 = new THREE.Mesh(circleGeometry2, circleMaterial2);
+    circleMesh2.position.set(0, 0.1, 0); // Adjust the position as necessary
+    circleMesh2.rotation.set(1.5, 0, 0);
+    scene.add(circleMesh2);
 
     animate();
 
