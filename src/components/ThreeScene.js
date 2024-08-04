@@ -198,8 +198,8 @@ const ThreeScene = () => {
 
     const textMesh = new Text();
     textMesh.text = '開発者';
-    textMesh.fontSize = 15;
-    textMesh.position.set(22, 16, 15);
+    textMesh.fontSize = 23;
+    textMesh.position.set(35, 24, 18);
     textMesh.rotation.x = Math.PI / -180;
     textMesh.rotation.y = Math.PI / -1;
 
