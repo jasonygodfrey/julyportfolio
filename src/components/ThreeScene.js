@@ -91,15 +91,14 @@ const ThreeScene = () => {
       });
       playerMesh.rotation.y = Math.PI;
       playerMesh.scale.set(0.10, 0.10, 0.10);
-      scene.add(playerMesh);
+     // scene.add(playerMesh);
 
       playerMixer = new THREE.AnimationMixer(playerMesh);
       playerAnimations = gltf.animations;
 
-      if (playerAnimations.length > 5) {
-        const runningAction = playerMixer.clipAction(playerAnimations[5]);
-        runningAction.clampWhenFinished = true;
-        runningAction.loop = THREE.LoopRepeat;
+      if (playerAnimations.length > 0) {
+        const defaultAction = playerMixer.clipAction(playerAnimations[0]);
+        defaultAction.play();
       }
     });
 
@@ -177,6 +176,50 @@ const ThreeScene = () => {
     }, undefined, function (error) {
       console.error(error);
     });
+
+// Load the mortal_kombat_fractured_logo model
+gltfLoader.load('/mortal_kombat_fractured_logo/scene.gltf', (gltf) => {
+  const logo = gltf.scene;
+  logo.traverse((child) => {
+    if (child.isMesh) {
+      child.material = new THREE.MeshBasicMaterial({ 
+        color: 0xffffff, 
+        wireframe: true,
+        transparent: true,
+        opacity: 0.1 // Reduce the opacity
+      });
+      child.castShadow = true;
+    }
+  });
+  logo.position.set(0, 0, -1); // Adjust the position as needed
+  logo.scale.set(1.6, 0.05, 0.4); // Adjust the scale as needed
+  logo.rotation.x = Math.PI / 2; // Rotate 90 degrees upright
+
+  scene.add(logo);
+});
+// Load the mortal_kombat_fractured_logo model
+gltfLoader.load('/mortal_kombat_fractured_logo/scene.gltf', (gltf) => {
+  const logo2 = gltf.scene;
+  logo2.traverse((child) => {
+    if (child.isMesh) {
+      child.material = new THREE.MeshBasicMaterial({ 
+        color: 0xffffff, 
+        wireframe: true,
+        transparent: true,
+        opacity: 0.1 // Reduce the opacity
+      });
+      child.castShadow = true;
+    }
+  });
+  logo2.position.set(0, 3.8, -1); // Adjust the position as needed
+  logo2.scale.set(1.6, 0.05, 0.4); // Adjust the scale as needed
+  logo2.rotation.x = Math.PI / 2; // Rotate 90 degrees upright
+
+  scene.add(logo2);
+});
+
+
+
 
     gltfLoader.load('/pulses/scene.gltf', (gltf) => {
       const pulses = gltf.scene;
