@@ -120,7 +120,7 @@
     }
 
     .title {
-      font-size: 18px;
+      font-size: 12px;
       max-width: 600px;
       line-height: 1.5;
       text-align: center;
@@ -130,7 +130,7 @@
     }
 
     .subtext {
-      font-size: 18px;
+      font-size: 12px;
       max-width: 600px;
       line-height: 1.5;
       text-align: center;
@@ -149,7 +149,6 @@
     }
 
     .button {
-      
       background-color: transparent;
       color: white;
       border: 0px solid #555565;
@@ -166,7 +165,7 @@
 
     .icon-button {
       display: inline-block;
-      margin: 0 10px 20px 10px;
+      margin: 0 10px 0px 10px;
       color: white;
       font-size: 50px;
       transition: color 0.3s;
@@ -205,7 +204,7 @@
       }
 
       .icon-button {
-        font-size: 40px;
+        font-size: 0px;
       }
     }
 
@@ -220,7 +219,7 @@
       }
 
       .subtext {
-        font-size: 14px;
+        font-size: 10px;
         max-width: 80%;
         line-height: 1.3;
       }
@@ -231,7 +230,7 @@
       }
 
       .icon-button {
-        font-size: 30px;
+        font-size: 40px;
       }
     }
   </style>
@@ -252,8 +251,6 @@
 
   <header>
     <div class="centered-header">
-
-
       <h2></h2>
     </div>
   </header>
@@ -261,21 +258,6 @@
   <div class="sidebar">
     <h3><br /></h3>
     <div id="clock-weather"></div>
-  </div>
-
-  <!--
-    <div class="console-container">
-      <div class="console">
-        <div class="console-content">
-          <p class="console-line">//Directory:</p>
-          <p class="console-line"><a href="https://samuraistudios.vercel.app/" class="command-link">*SAMURAI STUDIOS</a></p>
-          <p class="console-line"><a href="/web/" class="command-link">*FULL STACK WEB|GAME DEV</a></p>
-          <p class="console-line"><a href="https://github.com/jasonygodfrey" class="command-link">*GITHUB</a></p>
-          <p class="console-line"><a href="/about" class="command-link">*ABOUT</a></p>
-          <p class="console-line"><a href="https://www.linkedin.com/in/jasong7" class="command-link">*LINKEDIN CONTACT</a></p>
-        </div>
-      </div>
-    -->
   </div>
 
   <div id="contact-info" style="display: none">
@@ -291,32 +273,30 @@
   <div id="About-info" style="display: none">about</div>
 
   <div class="navbar">
-    <img src="/logo.gif" alt="Logo" style="width: 500px; height: auto;">
-       
-    <!-- Navbar content -->
+    <div style="display: flex; justify-content: center; align-items: center; height: 25vh;">
+      <img src="/logo.gif" alt="Logo" style="width: 500px; height: auto;">
+    </div>
   </div>
   <div class="section active" id="home">
-    <!--
-    <div class="section-content">
-      <div class="title"></div>
-      <div class="domain" style="font-family: 'MHeiPRCMedium';">
-
-      </div>
-
-      <div class="subtext">STEP INTO THE FUTURE OF WEB EXPERIENCES</div>
-
-
-      
-    </div> -->
   </div> 
   <div class="section" id="about">
     <div class="section-content" style="position: relative; padding: 20px; background-color: transparent;">
-      <div class="title">About</div>
+      <div class="title">ABOUT</div>
       <div class="subtext">
-        I am a full-stack software engineer specializing in creating immersive web and game experiences. My work blends
+        サムライコーディングへようこそ：ネオンに染まったウェブデザインが没入感あふれる3D世界と融合する場所です。私はこのデジタルオデッセイの設計者であり暗号解読者であるジェイソンです。AR/VRの風景とJavaScriptのマトリックスを駆使して、フルスタックの航海を作り上げています。影の名匠たちの協力を得て、私たちはあなたのビジョンを解読し、革新とサイバネティックな芸術が交差する現実を創り上げます。
+        <br>I am a full-stack software engineer specializing in creating immersive web and game experiences. My work blends
         innovation and creativity, bringing your digital visions to life.
+      
+        <div class="title">CONTACT</div>
+        <div class="icons">
+          <a href="https://github.com/jasonygodfrey" target="_blank" class="icon-button"><i class="fab fa-github"></i></a>
+          <a href="https://www.linkedin.com/in/jasong7/" target="_blank" class="icon-button"><i
+              class="fab fa-linkedin"></i></a>
+
+        </div>
+      
       </div>
-      <button class="button" onclick="navigateTo('contact')">Contact</button>
+      <div class="subtext">Get in touch for more information or collaborations.</div>
     </div>
   </div>
   <div class="section" id="contact">
@@ -332,13 +312,30 @@
     </div>
   </div>
   <div class="footer-nav">
+    <div style="display: flex; justify-content: center; align-items: center; height: 10vh;">
+      <div style="
+        position: relative;
+        width: 100%;
+        height: 10px;
+        background-color: rgba(4, 4, 4, 0.5);
+        clip-path: polygon(100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 calc(100% - 15px), 15px 0, 100% 0, 100% calc(100% - 15px), 100% 0);
+        box-shadow: 0 0 15px rgba(255, 0, 0, 1), 0 0 10px rgba(255, 0, 0, 0.5), inset 0 0 4px rgba(255, 0, 0, 0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 24;
+        overflow: hidden;
+      ">
+        <div id="healthBar" style="width: 100%; height: 100%; background-color: rgba(255, 0, 0, 0.8); transition: width 0.5s; z-index: 20;"></div>
+        <div id="healthBarText" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: white; font-family: 'Jura', sans-serif; font-size: 18px; z-index: 21;"></div>
+      </div>
+    </div>
     
-    <button class="button" onclick="navigateTo('about')"> 
-      <a class="si-buttons-scifi__style-6__button-6" class="button" onclick="navigateTo('about')" style="margin-right:5px; margin-bottom:15px; margin-left:5px;">
-      <span>  襲
-      </span>
-      <shine></shine>
-      <ripple></ripple>
+    <button id="kanjiButton" class="button" onclick="navigateTo('about')"> 
+      <a class="si-buttons-scifi__style-6__button-6" class="button" style="margin-right:5px; margin-bottom:15px; margin-left:5px;">
+        <span>襲</span>
+        <shine></shine>
+        <ripple></ripple>
       </a>
     </button>
     <div class="line"></div>
@@ -358,6 +355,24 @@
       <feComposite in="SourceGraphic" in2="a" operator="in"></feComposite>
     </filter>
   </svg>
+
+  <script>
+    function setHealth(health) {
+      const healthBar = document.getElementById('healthBar');
+      const healthBarText = document.getElementById('healthBarText');
+      healthBar.style.width = health + '%';
+      //healthBarText.innerText = health;
+    }
+
+    // Example usage
+    setHealth(100); // Sets health to 100%
+
+    // Remove hover effect on click
+    const kanjiButton = document.getElementById('kanjiButton');
+    kanjiButton.addEventListener('click', () => {
+      kanjiButton.classList.remove('button:hover');
+    });
+  </script>
 
 </body>
 

@@ -203,19 +203,19 @@ gltfLoader.load('/mortal_kombat_fractured_logo/scene.gltf', (gltf) => {
   logo2.traverse((child) => {
     if (child.isMesh) {
       child.material = new THREE.MeshBasicMaterial({ 
-        color: 0xffffff, 
+        color: 0x000000, 
         wireframe: true,
         transparent: true,
-        opacity: 0.1 // Reduce the opacity
+        opacity: 1 // Reduce the opacity
       });
-      child.castShadow = true;
+      child.castShadow = false;
     }
   });
   logo2.position.set(0, 3.8, -1); // Adjust the position as needed
   logo2.scale.set(1.6, 0.05, 0.4); // Adjust the scale as needed
   logo2.rotation.x = Math.PI / 2; // Rotate 90 degrees upright
 
-  scene.add(logo2);
+  //scene.add(logo2);
 });
 
 
