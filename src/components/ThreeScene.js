@@ -5,6 +5,8 @@ import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass';
 import { SMAAPass } from 'three/examples/jsm/postprocessing/SMAAPass';
+import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass'; // Correct import
+
 import * as CANNON from 'cannon-es';
 import { Text } from 'troika-three-text';
 
@@ -12,6 +14,32 @@ const ThreeScene = () => {
   const mountRef = useRef(null);
   const keyState = {};
   const mouseMovement = useRef({ x: 0, y: 0 });
+
+  const PixelationShader = {
+    uniforms: {
+      'tDiffuse': { value: null },
+      'resolution': { value: new THREE.Vector2(512, 512) },
+      'pixelSize': { value: 8 }
+    },
+    vertexShader: `
+      varying highp vec2 vUv;
+      void main() {
+        vUv = uv;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `,
+    fragmentShader: `
+      uniform sampler2D tDiffuse;
+      uniform vec2 resolution;
+      uniform float pixelSize;
+      varying highp vec2 vUv;
+      void main() {
+        vec2 dxy = pixelSize / resolution;
+        vec2 coord = dxy * floor(vUv / dxy);
+        gl_FragColor = texture2D(tDiffuse, coord);
+      }
+    `
+  };
 
   useEffect(() => {
     const scene = new THREE.Scene();
@@ -38,26 +66,8 @@ const ThreeScene = () => {
     directionalLight.shadow.camera.bottom = -50;
     scene.add(directionalLight);
 
-    // Add an additional spotlight to enhance illumination
-    const spotLight = new THREE.SpotLight(0xffffff, 2);
-    spotLight.position.set(0, 30, 20);
-    spotLight.angle = Math.PI / 6;
-    spotLight.penumbra = 0.5;
-    spotLight.decay = 2;
-    spotLight.distance = 100;
-    spotLight.castShadow = true;
-    //scene.add(spotLight);
-
     const loader = new THREE.CubeTextureLoader();
-    const texture = loader.load([
-      'path/to/px.jpg',
-      'path/to/nx.jpg',
-      'path/to/py.jpg',
-      'path/to/ny.jpg',
-      'path/to/pz.jpg',
-      'path/to/nz.jpg',
-    ]);
-    scene.background = texture;
+    
 
     const world = new CANNON.World();
     world.gravity.set(0, -9.82, 0);
@@ -91,7 +101,6 @@ const ThreeScene = () => {
       });
       playerMesh.rotation.y = Math.PI;
       playerMesh.scale.set(0.10, 0.10, 0.10);
-     // scene.add(playerMesh);
 
       playerMixer = new THREE.AnimationMixer(playerMesh);
       playerAnimations = gltf.animations;
@@ -153,7 +162,7 @@ const ThreeScene = () => {
     loader2.load('avatar_2025/bucky4.gltf', function (gltf) {
       gltf.scene.traverse(function (child) {
         if (child.isMesh) {
-          const wireframeMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true, opacity: 0.118, transparent: true });
+          const wireframeMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true, opacity: 0.00118, transparent: true });
           child.material = wireframeMaterial;
         }
       });
@@ -197,47 +206,11 @@ gltfLoader.load('/mortal_kombat_fractured_logo/scene.gltf', (gltf) => {
 
   scene.add(logo);
 });
-// Load the mortal_kombat_fractured_logo model
-gltfLoader.load('/mortal_kombat_fractured_logo/scene.gltf', (gltf) => {
-  const logo2 = gltf.scene;
-  logo2.traverse((child) => {
-    if (child.isMesh) {
-      child.material = new THREE.MeshBasicMaterial({ 
-        color: 0x000000, 
-        wireframe: true,
-        transparent: true,
-        opacity: 1 // Reduce the opacity
-      });
-      child.castShadow = false;
-    }
-  });
-  logo2.position.set(0, 3.8, -1); // Adjust the position as needed
-  logo2.scale.set(1.6, 0.05, 0.4); // Adjust the scale as needed
-  logo2.rotation.x = Math.PI / 2; // Rotate 90 degrees upright
-
-  //scene.add(logo2);
-});
 
 
 
 
-    gltfLoader.load('/pulses/scene.gltf', (gltf) => {
-      const pulses = gltf.scene;
-      pulses.traverse((child) => {
-        if (child.isMesh) {
-          child.castShadow = true;
-        }
-      });
-      pulses.position.set(0, 0, 0);
-      pulses.scale.set(20, 20, 20);
 
-      const pulsesMixer = new THREE.AnimationMixer(pulses);
-      const pulsesAnimations = gltf.animations;
-      if (pulsesAnimations.length > 0) {
-        const action = pulsesMixer.clipAction(pulsesAnimations[0]);
-        action.play();
-      }
-    });
 
     const textMesh = new Text();
     textMesh.text = '開発者';
@@ -257,22 +230,6 @@ gltfLoader.load('/mortal_kombat_fractured_logo/scene.gltf', (gltf) => {
       scene.add(textMesh);
     });
 
-    const textMesh2 = new Text();
-    textMesh2.text = '開発者';
-    textMesh2.fontSize = 10;
-    textMesh2.position.set(15, 22, 15);
-    textMesh2.rotation.x = Math.PI / -180;
-    textMesh2.rotation.y = Math.PI / -1;
-    textMesh2.material = new THREE.MeshBasicMaterial({ 
-      color: 0xff0000, 
-      wireframe: true,
-      transparent: true,
-      opacity: 1
-    });
-
-    textMesh2.sync(() => {
-      // scene.add(textMesh2);
-    });
 
     const circleGeometry = new THREE.CircleGeometry(5, 32);
     const circleMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 });
@@ -290,10 +247,16 @@ gltfLoader.load('/mortal_kombat_fractured_logo/scene.gltf', (gltf) => {
     // Add SMAA pass
     const smaaPass = new SMAAPass(window.innerWidth, window.innerHeight);
 
+    // Custom pixelation pass
+   // const pixelationPass = new ShaderPass(PixelationShader);
+    //pixelationPass.uniforms['resolution'].value = new THREE.Vector2(window.innerWidth, window.innerHeight);
+    //pixelationPass.uniforms['pixelSize'].value = 1.005;  // Adjust pixel size as needed
+
     const composer = new EffectComposer(renderer);
     composer.addPass(renderScene);
     composer.addPass(bloomPass);
     composer.addPass(smaaPass);
+   // composer.addPass(pixelationPass); // Add pixelation pass last
 
     const handleKeyDown = (event) => {
       keyState[event.code] = true;
